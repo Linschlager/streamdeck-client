@@ -1,0 +1,65 @@
+{
+  "nodes": {
+    "hix": {
+      "inputs": {
+        "nixpkgs": [
+          "nixpkgs"
+        ]
+      },
+      "locked": {
+        "lastModified": 1748791384,
+        "narHash": "sha256-B/xEMhdQL6ZCFwg8f9hJrvWYh9aweVgpEB2XbsamrGI=",
+        "owner": "tek",
+        "repo": "hix",
+        "rev": "e6b915372df89f71da226e973ec0d6af01b8d957",
+        "type": "github"
+      },
+      "original": {
+        "owner": "tek",
+        "repo": "hix",
+        "type": "github"
+      }
+    },
+    "nixpkgs": {
+      "locked": {
+        "lastModified": 1749168695,
+        "narHash": "sha256-uVvUtySpDxeTyh1lZeI9833SuP7L5KurSg9YzLKtrc0=",
+        "owner": "nixos",
+        "repo": "nixpkgs",
+        "rev": "543fe66983012b29c4736d179fc4dd5f5c775295",
+        "type": "github"
+      },
+      "original": {
+        "owner": "nixos",
+        "ref": "nixpkgs-25.05-darwin",
+        "repo": "nixpkgs",
+        "type": "github"
+      }
+    },
+    "root": {
+      "inputs": {
+        "hix": "hix",
+        "nixpkgs": "nixpkgs",
+        "streamdeck": "streamdeck"
+      }
+    },
+    "streamdeck": {
+      "flake": false,
+      "locked": {
+        "lastModified": 1747254737,
+        "narHash": "sha256-5qVIrCgoRChp1Y19WXDUnbXC77k82+BZNgSJ0p5+y40=",
+        "owner": "ners",
+        "repo": "streamdeck-haskell",
+        "rev": "fbcf2256ac4d385368e767318f1ca39255ff3629",
+        "type": "github"
+      },
+      "original": {
+        "owner": "ners",
+        "repo": "streamdeck-haskell",
+        "type": "github"
+      }
+    }
+  },
+  "root": "root",
+  "version": 7
+}
