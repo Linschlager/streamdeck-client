@@ -11,7 +11,7 @@ import Prelude
 encodeImage :: (ColorSpaceConvertible px PixelYCbCr8) => Image px -> ByteString
 encodeImage =
     LBS.toStrict
-        . encodeJpegAtQuality 95
+        . encodeJpegAtQuality 100
         . convertImage
         . flipHorizontally
         . flipVertically

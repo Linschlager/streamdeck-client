@@ -4,10 +4,11 @@ module Prelude
     , module Control.Monad.Reader.Class
     , module Data.Bits
     , module Data.ByteString
+    , module Data.Either
     , module Data.Maybe
     , module Data.Ord
-    , module Data.Word
     , module Data.Text
+    , module Data.Word
     , module Debug.Trace
     , module FRP.Rhine
     , module GHC.Generics
@@ -22,6 +23,7 @@ import Control.Monad.Reader.Class
 import Data.Bits
 import Data.ByteString (ByteString)
 import Data.Maybe (catMaybes, fromMaybe)
+import Data.Either (fromRight)
 import Data.Ord
 import Data.Text (Text)
 import Data.Word (Word16, Word8)

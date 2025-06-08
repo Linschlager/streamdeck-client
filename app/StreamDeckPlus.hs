@@ -1,11 +1,12 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
 module StreamDeckPlus where
 
 import FRP.StreamDeck.Layer
 import FRP.StreamDeck.StreamDeckPlusClock
-import Teletubbies
+import Layers.Layer (handleLayerEvent, DeckLayers)
 import Prelude
 
-instance Layer StreamDeckPlusEvent Teletubbies where
+instance Layer StreamDeckPlusEvent DeckLayers where
     layerEvent (DisplayButtonEvent e) l =
         case layerEvent e l of
             LayerEvent{..} -> LayerEvent{onLayer, event = DisplayButtonEvent event}
@@ -17,10 +18,10 @@ handleLayerEvent
        , MonadFail m
        , IsStreamDeckWithDisplayButtons s
        )
-    => LayerEvent StreamDeckPlusEvent Teletubbies
+    => LayerEvent StreamDeckPlusEvent DeckLayers
     -> StreamDeckT m s ()
-handleLayerEvent SwitchLayers{..} = Teletubbies.handleLayerEvent SwitchLayers{..}
-handleLayerEvent LayerEvent{event = DisplayButtonEvent event, ..} = Teletubbies.handleLayerEvent LayerEvent{..}
+handleLayerEvent SwitchLayers{..} = Layers.Layer.handleLayerEvent SwitchLayers{..}
+handleLayerEvent LayerEvent{event = DisplayButtonEvent event, ..} = Layers.Layer.handleLayerEvent LayerEvent{..}
 handleLayerEvent _ = pure ()
 
 deriving stock instance Show StreamDeckPlusEvent

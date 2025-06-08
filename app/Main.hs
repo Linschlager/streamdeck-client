@@ -14,8 +14,8 @@ import StreamDeckPlus qualified
 import System.Hardware.StreamDeck qualified as StreamDeck
 import System.Hardware.StreamDeck.StreamDeckMk2
 import System.Hardware.StreamDeck.StreamDeckPlus
-import Teletubbies
 import Prelude
+import Layers.Layer (DeckLayers (..))
 
 foo
     :: forall cl io s m
@@ -23,12 +23,12 @@ foo
        , m ~ StreamDeckT io s
        , Show (Tag cl)
        , Show (Diff (Time cl))
-       , Layer (Tag cl) Teletubbies
+       , Layer (Tag cl) DeckLayers
        )
-    => (LayerEvent (Tag cl) Teletubbies -> m ())
+    => (LayerEvent (Tag cl) DeckLayers -> m ())
     -> ClSF m cl () ()
 foo handleEvent =
-    layer Red
+    layer BaseLayer
         >-> traceMSF "Event: "
         >-> arrMCl handleEvent
 
