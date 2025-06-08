@@ -49,6 +49,7 @@ in
       "PackageImports"
       "RecordWildCards"
       "StrictData"
+      "StandaloneDeriving"
       "TypeFamilies"
       "ViewPatterns"
     ];
@@ -69,16 +70,17 @@ in
       enable = true;
       source-dirs = "app";
       dependencies = [
-        "text"
+        "FontyFruity"
         "JuicyPixels"
         "JuicyPixels-extra"
-        "FontyFruity"
         "Rasterific"
         "bytestring"
+        "monad-schedule"
         "mtl"
         "rhine"
         "rhine-streamdeck"
         "streamdeck"
+        "text"
         "unliftio"
       ];
     };
