@@ -69,14 +69,17 @@ in
       enable = true;
       source-dirs = "app";
       dependencies = [
-        "bytestring"
-        "rhine"
-        "mtl"
-        "unliftio"
+        "text"
         "JuicyPixels"
         "JuicyPixels-extra"
-        "streamdeck"
+        "FontyFruity"
+        "Rasterific"
+        "bytestring"
+        "mtl"
+        "rhine"
         "rhine-streamdeck"
+        "streamdeck"
+        "unliftio"
       ];
     };
   };

@@ -3,6 +3,7 @@ module Teletubbies where
 import FRP.StreamDeck.DisplayButtonEvents
 import FRP.StreamDeck.Layer
 import Image
+import SvgImage qualified
 import Prelude
 
 data Teletubbies = Red | Blue deriving stock (Bounded, Enum, Eq, Show)
@@ -32,8 +33,9 @@ handleLayerEvent
     LayerEvent
         { event = DisplayButtonPressed key
         , onLayer = Red
-        } =
-        setDisplayButtonImage key $ redDynamicKeyImage @s
+        } = do
+        font <- liftIO SvgImage.loadFont
+        setDisplayButtonImage key $ SvgImage.imageFromText @s font (show key)
 handleLayerEvent
     LayerEvent
         { event = DisplayButtonPressed key

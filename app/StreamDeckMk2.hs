@@ -1,3 +1,4 @@
+{-# OPTIONS_GHC -Wno-orphans #-}
 module StreamDeckMk2 where
 
 import FRP.StreamDeck.Layer

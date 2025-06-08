@@ -7,6 +7,7 @@ module Prelude
     , module Data.Maybe
     , module Data.Ord
     , module Data.Word
+    , module Data.Text
     , module Debug.Trace
     , module FRP.Rhine
     , module GHC.Generics
@@ -22,6 +23,7 @@ import Data.Bits
 import Data.ByteString (ByteString)
 import Data.Maybe (catMaybes, fromMaybe)
 import Data.Ord
+import Data.Text (Text)
 import Data.Word (Word16, Word8)
 import Debug.Trace
 import FRP.Rhine hiding (forever, newChan, try)
@@ -34,6 +36,7 @@ import System.Hardware.StreamDeck
     , StreamDeckT
     )
 import "base" Prelude
+
 
 traceMSF
     :: forall a m t

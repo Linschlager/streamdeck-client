@@ -3,16 +3,10 @@ module Image where
 import Codec.Picture
 import Codec.Picture.Extra (flipHorizontally, flipVertically)
 import Codec.Picture.Types
-import Control.Monad.IO.Class (MonadIO)
-import Data.ByteString (ByteString)
 import Data.ByteString.Lazy qualified as LBS
 import Data.Either (fromRight)
-import System.Hardware.StreamDeck
-    ( IsStreamDeckWithDisplayButtons
-    , StreamDeckT (..)
-    )
 import System.Hardware.StreamDeck qualified as StreamDeck
-import "base" Prelude
+import Prelude
 
 encodeImage :: (ColorSpaceConvertible px PixelYCbCr8) => Image px -> ByteString
 encodeImage =
