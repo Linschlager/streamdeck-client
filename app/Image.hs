@@ -5,13 +5,17 @@ import Codec.Picture.Extra (flipHorizontally, flipVertically)
 import Codec.Picture.Types
 import Data.ByteString.Lazy qualified as LBS
 import Data.Either (fromRight)
+import System.Hardware.StreamDeck
+    ( IsStreamDeckWithDisplayButtons
+    , StreamDeckT (..)
+    )
 import System.Hardware.StreamDeck qualified as StreamDeck
 import Prelude
 
 encodeImage :: (ColorSpaceConvertible px PixelYCbCr8) => Image px -> ByteString
 encodeImage =
     LBS.toStrict
-        . encodeJpegAtQuality 100
+        . encodeJpegAtQuality 95
         . convertImage
         . flipHorizontally
         . flipVertically

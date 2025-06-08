@@ -36,7 +36,9 @@ main :: IO ()
 main = do
     void $ StreamDeck.runStreamDeck @StreamDeckMk2 do
         traceShowM =<< asks (.deviceInfo)
+        StreamDeckMk2.doSetup
         flow $ foo StreamDeckMk2.handleLayerEvent @@ StreamDeckMk2Clock
     void $ StreamDeck.runStreamDeck @StreamDeckPlus do
         traceShowM =<< asks (.deviceInfo)
+        StreamDeckPlus.doSetup
         flow $ foo StreamDeckPlus.handleLayerEvent @@ StreamDeckPlusClock
