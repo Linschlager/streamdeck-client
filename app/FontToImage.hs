@@ -32,7 +32,6 @@ alignmentAnchor BoundingBox{..} alignment = do
     let centeredX = fromIntegral bWidth / 2 - width / 2
     let centeredY = fromIntegral bHeight / 2 + height / 2
 
-
     case alignment of
        TopLeft -> V2 0 height + V2 padding padding
        TopCenter -> V2 centeredX height + V2 0 padding
@@ -58,7 +57,8 @@ fontAlignment font fontSize inputText align = do
 
 textToImage :: forall s. IsStreamDeckWithDisplayButtons s => Font -> String -> TextAlignment -> Drawing PixelRGBA8 ()
 textToImage font inputText align = do
-    let fontSize = PointSize 8
+    let bHeight = StreamDeck.buttonImageHeight @s
+    let fontSize = PointSize (fromIntegral bHeight / 9)
     let drawColor = PixelRGBA8 0 0 0 255
     let fontAnchor = fontAlignment @s font fontSize inputText align
 

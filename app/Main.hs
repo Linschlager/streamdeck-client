@@ -7,9 +7,12 @@ import FRP.StreamDeck.Layer
 import FRP.StreamDeck.StreamDeckMk2Clock
     ( StreamDeckMk2Clock (StreamDeckMk2Clock)
     )
+import FRP.StreamDeck.StreamDeckPlusClock (StreamDeckPlusClock(StreamDeckPlusClock))
 import StreamDeckMk2 qualified
+import StreamDeckPlus qualified
 import System.Hardware.StreamDeck qualified as StreamDeck
 import System.Hardware.StreamDeck.StreamDeckMk2
+import System.Hardware.StreamDeck.StreamDeckPlus
 import Prelude
 import Layers.Layer (DeckLayers (..), doSetup)
 import Control.Monad.Schedule.Class
@@ -52,7 +55,7 @@ main = do
             foo StreamDeckMk2.handleLayerEvent @@ StreamDeckMk2Clock
             |@|
             tick @@ ioClock waitClock
-    --void $ StreamDeck.runStreamDeck @StreamDeckPlus do
-    --    traceShowM =<< asks (.deviceInfo)
-    --    StreamDeckPlus.doSetup
-    --    flow $ foo StreamDeckPlus.handleLayerEvent @@ StreamDeckPlusClock
+    void $ StreamDeck.runStreamDeck @StreamDeckPlus do
+        traceShowM =<< asks (.deviceInfo)
+        doSetup
+        flow $ foo StreamDeckPlus.handleLayerEvent @@ StreamDeckPlusClock

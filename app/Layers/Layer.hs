@@ -8,7 +8,8 @@ import SvgImage qualified
 import FontToImage (TextAlignment(..))
 import Image (setDisplayButtonImage)
 import System.Hardware.StreamDeck qualified as StreamDeck
-import Buttons.StockButton qualified as StockButton
+import Buttons.GithubPrButton qualified as GithubPrButton
+import Actions.GithubPrStatus qualified as GithubPrStatus
 
 data DeckLayers
     = BaseLayer
@@ -29,21 +30,6 @@ instance Layer DisplayButtonEvent DeckLayers where
             }
     layerEvent event onLayer = LayerEvent{..}
 
-setStockImage :: forall m s. (MonadIO m, MonadFail m, IsStreamDeckWithDisplayButtons s) => Int -> String -> StreamDeckT m s ()
-setStockImage key symbol = do
-    image <- liftIO $ StockButton.update @s symbol
-    Image.setDisplayButtonImage key $
-        SvgImage.drawImage @s image
-
-maybeStockButton :: Int -> Maybe String
-maybeStockButton key =
-    case key of
-        1 -> Just "TSLA"
-        2 -> Just "AAPL"
-        3 -> Just "NVDA"
-        4 -> Just "SMI"
-        _ -> Nothing
-
 handleLayerEvent
     :: forall s m
      . ( MonadIO m
@@ -52,12 +38,6 @@ handleLayerEvent
        )
     => LayerEvent DisplayButtonEvent DeckLayers
     -> StreamDeckT m s ()
-handleLayerEvent
-    LayerEvent
-        { event = DisplayButtonPressed key@(maybeStockButton -> Just symbol)
-        , onLayer = BaseLayer
-        } = do
-        setStockImage key symbol
 handleLayerEvent
     LayerEvent
         { event = DisplayButtonPressed key
@@ -76,8 +56,12 @@ doSetup :: forall m s.
 doSetup = do
     let x :: Int = StreamDeck.displayButtonCount @s
     font <- liftIO FontToImage.loadFont
+    prs <- liftIO GithubPrStatus.pullRequestsForRepo
     forM_ [0..x-1] $ \key -> case key of
-        (maybeStockButton -> Just symbol) -> setStockImage key symbol
+        ((prs !?) -> Just pr) -> 
+            Image.setDisplayButtonImage key
+                . SvgImage.drawImage @s
+                =<< GithubPrButton.update @s pr
         _ -> 
             Image.setDisplayButtonImage key
                 $ SvgImage.drawImage @s

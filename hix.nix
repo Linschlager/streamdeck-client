@@ -72,6 +72,7 @@ in
       dependencies = [
         "http-client"
         "http-client-tls"
+        "http-types"
         "aeson"
         "FontyFruity"
         "JuicyPixels"
@@ -84,7 +85,6 @@ in
         "rhine-streamdeck"
         "streamdeck"
         "text"
-        "unliftio"
       ];
     };
   };

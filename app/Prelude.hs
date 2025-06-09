@@ -2,15 +2,21 @@ module Prelude
     ( module Control.Monad
     , module Control.Monad.IO.Class
     , module Control.Monad.Reader.Class
+    , module Data.Aeson
     , module Data.Bits
     , module Data.ByteString
+    , module Data.ByteString.Lazy
     , module Data.Either
+    , module Control.Applicative
     , module Data.Maybe
     , module Data.Ord
     , module Data.Text
+    , module Data.List
     , module Data.Word
     , module Debug.Trace
     , module FRP.Rhine
+    , module Codec.Picture
+    , module Graphics.Rasterific
     , module GHC.Generics
     , module Prelude
     , module System.Hardware.StreamDeck
@@ -20,16 +26,21 @@ where
 import Control.Monad
 import Control.Monad.IO.Class
 import Control.Monad.Reader.Class
+import Data.Aeson
 import Data.Bits
 import Data.ByteString (ByteString)
-import Data.Maybe (catMaybes, fromMaybe)
+import Data.ByteString.Lazy (LazyByteString)
+import Data.Maybe (catMaybes, fromMaybe, maybe)
 import Data.Either (fromRight)
 import Data.Ord
+import Data.List ((!?))
 import Data.Text (Text)
 import Data.Word (Word16, Word8)
 import Debug.Trace
-import FRP.Rhine hiding (forever, newChan, try)
+import FRP.Rhine hiding (forever, newChan, try, Result)
 import GHC.Generics
+import Graphics.Rasterific (Drawing)
+import Codec.Picture (PixelRGBA8)
 import System.Hardware.StreamDeck
     ( IsStreamDeck
     , IsStreamDeckWithButtons
@@ -38,7 +49,7 @@ import System.Hardware.StreamDeck
     , StreamDeckT
     )
 import "base" Prelude
-
+import Control.Applicative ((<|>))
 
 traceMSF
     :: forall a m t
