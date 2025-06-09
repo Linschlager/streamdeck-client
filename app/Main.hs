@@ -11,7 +11,7 @@ import StreamDeckMk2 qualified
 import System.Hardware.StreamDeck qualified as StreamDeck
 import System.Hardware.StreamDeck.StreamDeckMk2
 import Prelude
-import Layers.Layer (DeckLayers (..))
+import Layers.Layer (DeckLayers (..), doSetup)
 import Control.Monad.Schedule.Class
 import System.Hardware.StreamDeck (StreamDeckT(..))
 
@@ -47,7 +47,7 @@ main :: IO ()
 main = do
     void $ StreamDeck.runStreamDeck @StreamDeckMk2 do
         traceShowM =<< asks (.deviceInfo)
-        StreamDeckMk2.doSetup
+        doSetup
         flow $
             foo StreamDeckMk2.handleLayerEvent @@ StreamDeckMk2Clock
             |@|

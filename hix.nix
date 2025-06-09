@@ -70,6 +70,9 @@ in
       enable = true;
       source-dirs = "app";
       dependencies = [
+        "http-client"
+        "http-client-tls"
+        "aeson"
         "FontyFruity"
         "JuicyPixels"
         "JuicyPixels-extra"

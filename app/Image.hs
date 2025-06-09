@@ -4,11 +4,6 @@ import Codec.Picture
 import Codec.Picture.Extra (flipHorizontally, flipVertically)
 import Codec.Picture.Types
 import Data.ByteString.Lazy qualified as LBS
-import Data.Either (fromRight)
-import System.Hardware.StreamDeck
-    ( IsStreamDeckWithDisplayButtons
-    , StreamDeckT (..)
-    )
 import System.Hardware.StreamDeck qualified as StreamDeck
 import Prelude
 
