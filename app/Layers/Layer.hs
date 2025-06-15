@@ -40,6 +40,11 @@ handleLayerEvent
         setDisplayButtonImage key . SvgImage.drawImage @s $ FontToImage.textToImage @s font (show key) BottomCenter
 handleLayerEvent _ = pure ()
 
+-- | TODO
+-- 1. Filter out old reviews.
+-- 2. Show CTA per PR: Fully Approved = GREEN, Merge Conflicts = RED, NeedToReview = ORANGE, reviews received but not handled = YELLOW, no action needed = GRAY
+-- 3. On Press: Open PR in Browser
+-- ... Look into WebHooks
 updateGithubButtons :: forall m s. (MonadIO m, MonadFail m, IsStreamDeckWithDisplayButtons s) => [PullRequest] -> StreamDeckT m s ()
 updateGithubButtons prs = do
     let githubStartIndex  = 0 :: Int

@@ -25,7 +25,7 @@ instance (MonadIO m) => Clock m GithubClock
 
     initClock :: GithubClock -> RunningClockInit m (Time GithubClock) (Tag GithubClock)
     initClock GithubClock = do
-        (x, initialTime)  <- initClock $ ioClock @m $ waitClock @2000
+        (x, initialTime)  <- initClock $ ioClock @m $ waitClock @1000
         let clock = concatS @m $ clockContent x
         pure (clock, initialTime)
 

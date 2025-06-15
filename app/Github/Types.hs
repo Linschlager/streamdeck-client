@@ -9,14 +9,16 @@ data PrReviewState
     = Commented
     | ChangesRequested
     | Approved
+    | Pending
     deriving stock (Show)
 
 instance FromJSON PrReviewState where
     parseJSON =
         withText "PullRequestState" $ \case
             "COMMENTED" -> pure Commented
-            "APPROVED" -> pure Approved
             "CHANGES_REQUESTED" -> pure ChangesRequested
+            "APPROVED" -> pure Approved
+            "PENDING" -> pure Pending
             _ -> mzero
 
 data User = User
