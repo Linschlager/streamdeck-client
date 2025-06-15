@@ -33,13 +33,13 @@ data PullRequest = PullRequest
     deriving stock (Generic, Show)
     deriving anyclass (FromJSON)
 
-data PullRequestState
+data PullRequestReviewState
     = Commented
     | Approved
     | ChangesRequested
     deriving stock (Generic, Show, Eq)
 
-instance FromJSON PullRequestState where
+instance FromJSON PullRequestReviewState where
     parseJSON =
         withText "PullRequestState" $ \case
             "COMMENTED" -> pure Commented
@@ -50,7 +50,7 @@ instance FromJSON PullRequestState where
 data PullRequestReview = PullRequestReview
     { htmlUrl :: String
     , user :: GithubUser
-    , state :: PullRequestState
+    , state :: PullRequestReviewState
     }
     deriving stock (Generic, Show)
 
