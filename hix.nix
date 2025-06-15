@@ -70,22 +70,23 @@ in
       enable = true;
       source-dirs = "app";
       dependencies = [
-        "http-client"
-        "http-client-tls"
-        "http-types"
-        "aeson"
         "FontyFruity"
         "JuicyPixels"
         "JuicyPixels-extra"
         "Rasterific"
+        "aeson"
         "bytestring"
+        "http-client"
+        "http-client-tls"
+        "http-types"
         "monad-schedule"
+        "morpheus-graphql-client"
         "mtl"
-        "time"
         "rhine"
         "rhine-streamdeck"
         "streamdeck"
         "text"
+        "time"
       ];
     };
   };

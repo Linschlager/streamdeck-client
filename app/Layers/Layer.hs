@@ -8,7 +8,7 @@ import SvgImage qualified
 import FontToImage (TextAlignment(..))
 import Image (setDisplayButtonImage)
 import System.Hardware.StreamDeck qualified as StreamDeck
-import Github.GithubClock (GithubPullRequest(..))
+import Github.Types (PullRequest(..))
 
 data DeckLayers
     = BaseLayer
@@ -16,7 +16,7 @@ data DeckLayers
 
 data LayerUpdate e l
     = ByLayerEvent (LayerEvent e l)
-    | ByGithub [GithubPullRequest]
+    | ByGithub [PullRequest]
     deriving stock (Show)
 
 -- | TODO switch layers
@@ -40,7 +40,7 @@ handleLayerEvent
         setDisplayButtonImage key . SvgImage.drawImage @s $ FontToImage.textToImage @s font (show key) BottomCenter
 handleLayerEvent _ = pure ()
 
-updateGithubButtons :: forall m s. (MonadIO m, MonadFail m, IsStreamDeckWithDisplayButtons s) => [GithubPullRequest] -> StreamDeckT m s ()
+updateGithubButtons :: forall m s. (MonadIO m, MonadFail m, IsStreamDeckWithDisplayButtons s) => [PullRequest] -> StreamDeckT m s ()
 updateGithubButtons prs = do
     let githubStartIndex  = 0 :: Int
     font <- liftIO FontToImage.loadFont

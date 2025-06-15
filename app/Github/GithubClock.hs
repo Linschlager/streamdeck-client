@@ -1,26 +1,32 @@
 module Github.GithubClock where
 
 import Prelude
+import Github.GithubQueries
+import Github.Types
 
 data GithubClock = GithubClock
 
-data GithubPullRequest = GithubPullRequest
-    { title :: String
-    , url :: String }
-    deriving stock (Show)
+fetchGithub :: IO LazyByteString
+fetchGithub = do
+    repo <- repositoryFromEnv
+    requestGithub . queryPullRequests $ repo
 
-instance (MonadIO m) => Clock m GithubClock 
+clockContent :: MonadIO m => RunningClock m UTCTime (Maybe Double) -> Automaton m () [(Time GithubClock, Tag GithubClock)]
+clockContent base = proc () -> do
+                (time, _) <- base -< ()
+                result <- constM . liftIO $ fetchGithub -< ()
+                let prs = either error (.pullRequests) $ eitherDecode @RepositoryResponse result
+                returnA -< pure (time, prs)
+
+instance (MonadIO m) => Clock m GithubClock
     where
     type Time GithubClock = UTCTime
-    type Tag GithubClock = [GithubPullRequest]
+    type Tag GithubClock = [PullRequest]
 
     initClock :: GithubClock -> RunningClockInit m (Time GithubClock) (Tag GithubClock)
     initClock GithubClock = do
-        (x, initialTime)  <- initClock $ ioClock @m $ waitClock @1000
-
-        let clock = concatS @m $ proc () -> do
-                (time, _) <- x -< ()
-                returnA -< pure (time, [])
+        (x, initialTime)  <- initClock $ ioClock @m $ waitClock @2000
+        let clock = concatS @m $ clockContent x
         pure (clock, initialTime)
 
 instance GetClockProxy GithubClock
