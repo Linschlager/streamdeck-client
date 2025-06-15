@@ -3,7 +3,7 @@ module StreamDeckMk2 where
 
 import FRP.StreamDeck.Layer
 import FRP.StreamDeck.StreamDeckMk2Clock
-import Layers.Layer (handleLayerEvent, DeckLayers(..))
+import Layers.Layer
 import Prelude
 
 instance Layer StreamDeckMk2Event DeckLayers where
@@ -12,14 +12,15 @@ instance Layer StreamDeckMk2Event DeckLayers where
             LayerEvent{..} -> LayerEvent{onLayer, event = DisplayButtonEvent event}
             SwitchLayers{..} -> SwitchLayers{..}
 
-handleLayerEvent
+handleLayerUpdate
     :: ( MonadIO m
        , MonadFail m
        , IsStreamDeckWithDisplayButtons s
        )
-    => LayerEvent StreamDeckMk2Event DeckLayers
+    => LayerUpdate StreamDeckMk2Event DeckLayers
     -> StreamDeckT m s ()
-handleLayerEvent SwitchLayers{..} = Layers.Layer.handleLayerEvent SwitchLayers{..}
-handleLayerEvent LayerEvent{event = DisplayButtonEvent event, ..} = Layers.Layer.handleLayerEvent LayerEvent{..}
+handleLayerUpdate (ByLayerEvent (SwitchLayers{..})) = handleLayerEvent SwitchLayers{..}
+handleLayerUpdate (ByLayerEvent LayerEvent {event = DisplayButtonEvent event, onLayer}) = handleLayerEvent LayerEvent{..}
+handleLayerUpdate (ByGithub prs) = updateGithubButtons prs
 
 deriving stock instance Show StreamDeckMk2Event

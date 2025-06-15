@@ -3,7 +3,7 @@ module StreamDeckPlus where
 
 import FRP.StreamDeck.Layer
 import FRP.StreamDeck.StreamDeckPlusClock
-import Layers.Layer (handleLayerEvent, DeckLayers)
+import Layers.Layer
 import Prelude
 
 instance Layer StreamDeckPlusEvent DeckLayers where
@@ -13,15 +13,17 @@ instance Layer StreamDeckPlusEvent DeckLayers where
             SwitchLayers{..} -> SwitchLayers{..}
     layerEvent event onLayer = LayerEvent{..}
 
-handleLayerEvent
+handleLayerUpdate
     :: ( MonadIO m
        , MonadFail m
        , IsStreamDeckWithDisplayButtons s
        )
-    => LayerEvent StreamDeckPlusEvent DeckLayers
+    => LayerUpdate StreamDeckPlusEvent DeckLayers
     -> StreamDeckT m s ()
-handleLayerEvent SwitchLayers{..} = Layers.Layer.handleLayerEvent SwitchLayers{..}
-handleLayerEvent LayerEvent{event = DisplayButtonEvent event, ..} = Layers.Layer.handleLayerEvent LayerEvent{..}
-handleLayerEvent _ = pure ()
+handleLayerUpdate (ByLayerEvent (SwitchLayers{..})) = handleLayerEvent SwitchLayers{..}
+handleLayerUpdate (ByLayerEvent (LayerEvent {event = DisplayButtonEvent event, onLayer})) = handleLayerEvent LayerEvent{..}
+handleLayerUpdate (ByLayerEvent (LayerEvent {event = KnobEvent _})) = undefined
+handleLayerUpdate (ByLayerEvent (LayerEvent {event = TouchScreenEvent} )) = undefined
+handleLayerUpdate (ByGithub prs) = updateGithubButtons prs
 
 deriving stock instance Show StreamDeckPlusEvent

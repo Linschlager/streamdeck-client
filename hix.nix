@@ -81,6 +81,7 @@ in
         "bytestring"
         "monad-schedule"
         "mtl"
+        "time"
         "rhine"
         "rhine-streamdeck"
         "streamdeck"

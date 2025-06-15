@@ -8,26 +8,19 @@ import SvgImage qualified
 import FontToImage (TextAlignment(..))
 import Image (setDisplayButtonImage)
 import System.Hardware.StreamDeck qualified as StreamDeck
-import Buttons.GithubPrButton qualified as GithubPrButton
-import Actions.GithubPrStatus qualified as GithubPrStatus
+import Github.GithubClock (GithubPullRequest(..))
 
 data DeckLayers
     = BaseLayer
-    | BrowserLayer
-
     deriving stock (Bounded, Enum, Eq, Show)
 
+data LayerUpdate e l
+    = ByLayerEvent (LayerEvent e l)
+    | ByGithub [GithubPullRequest]
+    deriving stock (Show)
+
+-- | TODO switch layers
 instance Layer DisplayButtonEvent DeckLayers where
-    layerEvent (DisplayButtonReleased 0) BrowserLayer =
-        SwitchLayers
-            { fromLayer = BrowserLayer
-            , toLayer = BaseLayer
-            }
-    layerEvent (DisplayButtonPressed 0) BaseLayer =
-        SwitchLayers
-            { fromLayer = BaseLayer
-            , toLayer = BrowserLayer
-            }
     layerEvent event onLayer = LayerEvent{..}
 
 handleLayerEvent
@@ -47,6 +40,13 @@ handleLayerEvent
         setDisplayButtonImage key . SvgImage.drawImage @s $ FontToImage.textToImage @s font (show key) BottomCenter
 handleLayerEvent _ = pure ()
 
+updateGithubButtons :: forall m s. (MonadIO m, MonadFail m, IsStreamDeckWithDisplayButtons s) => [GithubPullRequest] -> StreamDeckT m s ()
+updateGithubButtons prs = do
+    let githubStartIndex  = 0 :: Int
+    font <- liftIO FontToImage.loadFont
+    forM_ (zip [0..] prs) $ \((+ githubStartIndex) -> key, pr) ->
+        setDisplayButtonImage key . SvgImage.drawImage @s $ FontToImage.textToImage @s font pr.title BottomLeft
+
 doSetup :: forall m s.
        ( MonadIO m
        , MonadFail m
@@ -56,13 +56,8 @@ doSetup :: forall m s.
 doSetup = do
     let x :: Int = StreamDeck.displayButtonCount @s
     font <- liftIO FontToImage.loadFont
-    prs <- liftIO GithubPrStatus.pullRequestsForRepo
-    forM_ [0..x-1] $ \key -> case key of
-        ((prs !?) -> Just pr) -> 
-            Image.setDisplayButtonImage key
-                . SvgImage.drawImage @s
-                =<< GithubPrButton.update @s pr
-        _ -> 
+    forM_ [0..x-1] $ \key ->
             Image.setDisplayButtonImage key
                 $ SvgImage.drawImage @s
                 $ FontToImage.textToImage @s font (show key) Center
+
