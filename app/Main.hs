@@ -4,7 +4,7 @@ module Main where
 
 import Control.Monad.Schedule.Class
 import Github.GithubClock
-import Layers.Layer (DeckLayers (..), LayerUpdate(..), doSetup)
+import Layers.Layer -- (DeckLayer (..), LayerUpdate(..), LayerState(..), doSetup)
 import Prelude
 import StreamDeckMk2 qualified
 import StreamDeckPlus qualified
@@ -15,23 +15,21 @@ instance forall io s. (MonadSchedule io, Monad io) => MonadSchedule (StreamDeckT
   schedule as = StreamDeck . fmap (second (StreamDeck <$>)) $ schedule (unStreamDeck <$> as)
     where unStreamDeck (StreamDeck x) = x
 
+statefulSink :: (MonadIO m, MonadFail m) => (LayerUpdate StreamDeckMk2Event DeckLayer, LayerState) -> StreamDeckT m StreamDeckMk2 ((), LayerState)
+statefulSink (u, st) = do
+    let newSt = st
+    StreamDeckMk2.handleLayerUpdate u
+    pure ((), newSt)
+
+streamdeckRhine :: Rhine (StreamDeckT IO StreamDeckMk2) StreamDeckMk2Clock () (LayerUpdate StreamDeckMk2Event DeckLayer)
+streamdeckRhine = layer BaseLayer >-> arr ByLayerEvent @@ StreamDeckMk2Clock
+
+githubRhine :: Rhine (StreamDeckT IO StreamDeckMk2) GithubClock () (LayerUpdate e l)
+githubRhine = tagS >-> arr ByGithub @@ GithubClock
+
 main :: IO ()
-main = do
-    void $ StreamDeck.runStreamDeck @StreamDeckMk2 do
+main = void . StreamDeck.runStreamDeck @StreamDeckMk2 @IO $ do
         traceShowM =<< asks (.deviceInfo)
         doSetup
-        flow $
-            (layer BaseLayer >-> arr ByLayerEvent @@ StreamDeckMk2Clock
-            |@| tagS >-> arr ByGithub @@ GithubClock
-            )
-            @>-^ traceMSF "Event: "
-            @>-^ arrMCl StreamDeckMk2.handleLayerUpdate
-    void $ StreamDeck.runStreamDeck @StreamDeckPlus do
-        traceShowM =<< asks (.deviceInfo)
-        doSetup
-        flow $ 
-            (layer BaseLayer >-> arr ByLayerEvent @@ StreamDeckPlusClock
-            |@|
-            tagS >-> arr ByGithub @@ GithubClock
-            ) @>-^ traceMSF "Event: "
-            @>-^ arrMCl StreamDeckPlus.handleLayerUpdate
+        let initialState = LayerState { currentLayer = BaseLayer, github = Nothing }
+        flow $ (streamdeckRhine |@| githubRhine) @>-^ feedback initialState (arrMCl statefulSink)

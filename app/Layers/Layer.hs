@@ -3,13 +3,18 @@ module Layers.Layer where
 import FRP.StreamDeck.DisplayButtonEvents
 import FontToImage (TextAlignment(..))
 import FontToImage qualified
-import Github.Types (PullRequest(..))
+import Github.Types (RepositoryResponse(..), PullRequest(..))
 import Image (setDisplayButtonImage)
 import Prelude
 import SvgImage qualified
 import System.Hardware.StreamDeck qualified as StreamDeck
 
-data DeckLayers
+data LayerState = LayerState
+    { currentLayer :: DeckLayer
+    , github :: Maybe RepositoryResponse
+    }
+
+data DeckLayer
     = BaseLayer
     deriving stock (Bounded, Enum, Eq, Show)
 
@@ -19,7 +24,7 @@ data LayerUpdate e l
     deriving stock (Show)
 
 -- | TODO switch layers
-instance Layer DisplayButtonEvent DeckLayers where
+instance Layer DisplayButtonEvent DeckLayer where
     layerEvent event onLayer = LayerEvent{..}
 
 handleLayerEvent
@@ -28,7 +33,7 @@ handleLayerEvent
        , MonadFail m
        , IsStreamDeckWithDisplayButtons s
        )
-    => LayerEvent DisplayButtonEvent DeckLayers
+    => LayerEvent DisplayButtonEvent DeckLayer
     -> StreamDeckT m s ()
 handleLayerEvent
     LayerEvent
