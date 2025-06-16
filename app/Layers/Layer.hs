@@ -8,6 +8,7 @@ import Image (setDisplayButtonImage)
 import Prelude
 import SvgImage qualified
 import System.Hardware.StreamDeck qualified as StreamDeck
+import Data.Text qualified as Text
 
 data LayerState = LayerState
     { currentLayer :: DeckLayer
@@ -20,7 +21,7 @@ data DeckLayer
 
 data LayerUpdate e l
     = ByLayerEvent (LayerEvent e l)
-    | ByGithub [PullRequest]
+    | ByGithub RepositoryResponse
     deriving stock (Show)
 
 -- | TODO switch layers
@@ -30,19 +31,18 @@ instance Layer DisplayButtonEvent DeckLayer where
 handleLayerEvent
     :: forall s m
      . ( MonadIO m
-       , MonadFail m
-       , IsStreamDeckWithDisplayButtons s
        )
     => LayerEvent DisplayButtonEvent DeckLayer
+    -> LayerState
     -> StreamDeckT m s ()
 handleLayerEvent
-    LayerEvent
-        { event = DisplayButtonPressed key
-        , onLayer = BaseLayer
-        } = do
-        font <- liftIO FontToImage.loadFont
-        setDisplayButtonImage key . SvgImage.drawImage @s $ FontToImage.textToImage @s font (show key) BottomCenter
-handleLayerEvent _ = pure ()
+    LayerEvent { event = DisplayButtonPressed key, onLayer = BaseLayer } LayerState { github = Just gh } = do
+        case gh.pullRequests !? key of
+            Just pr -> do
+                liftIO . flip cmd "" $ "xdg-open" :| [ Text.pack pr.url ]
+                pure ()
+            Nothing -> pure ()
+handleLayerEvent _ _ = pure ()
 
 -- | TODO
 -- 1. Filter out old reviews.

@@ -12,6 +12,7 @@ module Prelude
     , module Data.Ord
     , module Data.Text
     , module Data.List
+    , module Data.List.NonEmpty
     , module Data.Word
     , module Debug.Trace
     , module FRP.Rhine
@@ -39,6 +40,7 @@ import Data.Maybe (catMaybes, fromMaybe, maybe, fromJust)
 import Data.Either (fromRight)
 import Data.Ord
 import Data.List ((!?))
+import Data.List.NonEmpty (NonEmpty((:|)))
 import Data.Text (Text)
 import Data.Word (Word16, Word8)
 import Debug.Trace
@@ -60,6 +62,10 @@ import System.Hardware.StreamDeck
     )
 import "base" Prelude
 import Control.Applicative ((<|>))
+import System.Process.Typed (StreamSpec, ExitCode (ExitSuccess))
+import System.Process.Typed qualified as Process
+import Data.Text qualified as Text
+import System.Exit (exitWith)
 
 traceMSF
     :: forall a m t
@@ -73,3 +79,22 @@ traceMSF prefix = proc a -> do
   where
     logStr :: Diff (Time t) -> a -> String
     logStr t x = concat ["[", show t, "] ", prefix, show x]
+
+cmd'
+    :: NonEmpty Text
+    -> StreamSpec 'Process.STInput ()
+    -> IO (ExitCode, LazyByteString, LazyByteString)
+cmd' (x :| xs) input = do
+    (exitCode, out, err) <-
+        Process.readProcess . Process.setStdin input $
+            Process.proc (Text.unpack x) (Text.unpack <$> xs)
+    pure (exitCode, out, err)
+
+cmd :: NonEmpty Text -> StreamSpec 'Process.STInput () -> IO LazyByteString
+cmd xs input =
+    cmd' xs input >>= \case
+        (ExitSuccess, out, _) -> pure out
+        (code, _, _) -> exitWith code
+
+cmd_ :: NonEmpty Text -> StreamSpec 'Process.STInput () -> IO ()
+cmd_ = (void .) . cmd

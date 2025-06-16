@@ -15,13 +15,13 @@ clockContent :: MonadIO m => RunningClock m UTCTime (Maybe Double) -> Automaton 
 clockContent base = proc () -> do
                 (time, _) <- base -< ()
                 result <- constM . liftIO $ fetchGithub -< ()
-                let prs = either error (.pullRequests) $ eitherDecode @RepositoryResponse result
+                let prs = either error id $ eitherDecode @RepositoryResponse result
                 returnA -< pure (time, prs)
 
 instance (MonadIO m) => Clock m GithubClock
     where
     type Time GithubClock = UTCTime
-    type Tag GithubClock = [PullRequest]
+    type Tag GithubClock = RepositoryResponse
 
     initClock :: GithubClock -> RunningClockInit m (Time GithubClock) (Tag GithubClock)
     initClock GithubClock = do

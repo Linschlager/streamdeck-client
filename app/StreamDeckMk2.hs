@@ -3,6 +3,7 @@ module StreamDeckMk2 where
 
 import Layers.Layer
 import Prelude
+import Github.Types
 import FRP.StreamDeck.StreamDeckMk2Clock (StreamDeckMk2Event(..))
 
 instance Layer StreamDeckMk2Event DeckLayer where
@@ -17,12 +18,13 @@ handleLayerUpdate
        , IsStreamDeckWithDisplayButtons s
        )
     => LayerUpdate StreamDeckMk2Event DeckLayer
+    -> LayerState
     -> StreamDeckT m s ()
-handleLayerUpdate (ByLayerEvent (SwitchLayers{..})) =
-    handleLayerEvent SwitchLayers{..}
-handleLayerUpdate (ByLayerEvent LayerEvent {event = DisplayButtonEvent event, onLayer}) =
-    handleLayerEvent LayerEvent{..}
-handleLayerUpdate (ByGithub prs) =
-    updateGithubButtons prs
+handleLayerUpdate (ByLayerEvent (SwitchLayers{..})) state =
+    handleLayerEvent SwitchLayers{..} state
+handleLayerUpdate (ByLayerEvent LayerEvent {event = DisplayButtonEvent event, onLayer}) state =
+    handleLayerEvent LayerEvent{..} state
+handleLayerUpdate (ByGithub prs) state =
+    updateGithubButtons prs.pullRequests
 
 deriving stock instance Show StreamDeckMk2Event
