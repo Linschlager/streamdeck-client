@@ -1,11 +1,10 @@
 module FontToImage where
 
-import Prelude
-
+import Codec.Picture.Types
 import Graphics.Rasterific
 import Graphics.Rasterific.Texture
 import Graphics.Text.TrueType (Font, loadFontFile, stringBoundingBox, BoundingBox (..))
-import Codec.Picture.Types
+import Prelude
 import System.Hardware.StreamDeck qualified as StreamDeck
 
 data TextAlignment

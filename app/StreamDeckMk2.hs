@@ -1,10 +1,9 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 module StreamDeckMk2 where
 
-import FRP.StreamDeck.Layer
-import FRP.StreamDeck.StreamDeckMk2Clock
 import Layers.Layer
 import Prelude
+import FRP.StreamDeck.StreamDeckMk2Clock (StreamDeckMk2Event(..))
 
 instance Layer StreamDeckMk2Event DeckLayers where
     layerEvent (DisplayButtonEvent e) l =

@@ -1,8 +1,8 @@
 module Github.GithubClock where
 
-import Prelude
 import Github.GithubQueries
 import Github.Types
+import Prelude
 
 data GithubClock = GithubClock
 

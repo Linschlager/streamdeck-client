@@ -80,13 +80,12 @@ in
         "http-client-tls"
         "http-types"
         "monad-schedule"
-        "morpheus-graphql-client"
         "mtl"
         "rhine"
         "rhine-streamdeck"
         "streamdeck"
         "text"
-        "time"
+        "typed-process"
       ];
     };
   };

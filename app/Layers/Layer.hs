@@ -1,14 +1,13 @@
 module Layers.Layer where
 
-import Prelude
-import FRP.StreamDeck.Layer
 import FRP.StreamDeck.DisplayButtonEvents
-import FontToImage qualified
-import SvgImage qualified
 import FontToImage (TextAlignment(..))
-import Image (setDisplayButtonImage)
-import System.Hardware.StreamDeck qualified as StreamDeck
+import FontToImage qualified
 import Github.Types (PullRequest(..))
+import Image (setDisplayButtonImage)
+import Prelude
+import SvgImage qualified
+import System.Hardware.StreamDeck qualified as StreamDeck
 
 data DeckLayers
     = BaseLayer

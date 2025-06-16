@@ -1,8 +1,7 @@
 {-# OPTIONS_GHC -Wno-orphans #-}
 module StreamDeckPlus where
 
-import FRP.StreamDeck.Layer
-import FRP.StreamDeck.StreamDeckPlusClock
+import FRP.StreamDeck.StreamDeckPlusClock (StreamDeckPlusEvent(..))
 import Layers.Layer
 import Prelude
 

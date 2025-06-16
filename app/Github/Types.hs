@@ -1,9 +1,7 @@
 module Github.Types where
 
 import Prelude
-import Data.Aeson
 import Data.Aeson.KeyMap qualified as KeyMap
-import Data.Maybe (fromJust)
 
 data PrReviewState
     = Commented

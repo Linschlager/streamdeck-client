@@ -1,12 +1,12 @@
 module Github.GithubQueries where
 
-import Prelude
-import Data.Text qualified as Text
 import Data.ByteString.Char8 qualified as ByteString
-import System.Environment ( getEnv )
+import Data.Text qualified as Text
 import Network.HTTP.Client
-import Network.HTTP.Types.Header
 import Network.HTTP.Client.TLS (newTlsManager)
+import Network.HTTP.Types.Header
+import Prelude
+import System.Environment ( getEnv )
 
 authTokenFromEnv :: IO String
 authTokenFromEnv = getEnv "GH_AUTHTOKEN"

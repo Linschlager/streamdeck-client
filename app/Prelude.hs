@@ -15,6 +15,11 @@ module Prelude
     , module Data.Word
     , module Debug.Trace
     , module FRP.Rhine
+    , module FRP.StreamDeck.Layer
+    , module FRP.StreamDeck.StreamDeckMk2Clock
+    , module FRP.StreamDeck.StreamDeckPlusClock 
+    , module System.Hardware.StreamDeck.StreamDeckMk2
+    , module System.Hardware.StreamDeck.StreamDeckPlus
     , module Codec.Picture
     , module Graphics.Rasterific
     , module GHC.Generics
@@ -30,7 +35,7 @@ import Data.Aeson
 import Data.Bits
 import Data.ByteString (ByteString)
 import Data.ByteString.Lazy (LazyByteString)
-import Data.Maybe (catMaybes, fromMaybe, maybe)
+import Data.Maybe (catMaybes, fromMaybe, maybe, fromJust)
 import Data.Either (fromRight)
 import Data.Ord
 import Data.List ((!?))
@@ -38,6 +43,11 @@ import Data.Text (Text)
 import Data.Word (Word16, Word8)
 import Debug.Trace
 import FRP.Rhine hiding (forever, newChan, try, Result)
+import FRP.StreamDeck.Layer
+import FRP.StreamDeck.StreamDeckMk2Clock hiding (DisplayButtonEvent)
+import FRP.StreamDeck.StreamDeckPlusClock hiding (DisplayButtonEvent)
+import System.Hardware.StreamDeck.StreamDeckMk2
+import System.Hardware.StreamDeck.StreamDeckPlus
 import GHC.Generics
 import Graphics.Rasterific (Drawing)
 import Codec.Picture (PixelRGBA8)

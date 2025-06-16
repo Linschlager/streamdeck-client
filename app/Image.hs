@@ -4,8 +4,8 @@ import Codec.Picture
 import Codec.Picture.Extra (flipHorizontally, flipVertically)
 import Codec.Picture.Types
 import Data.ByteString.Lazy qualified as LBS
-import System.Hardware.StreamDeck qualified as StreamDeck
 import Prelude
+import System.Hardware.StreamDeck qualified as StreamDeck
 
 encodeImage :: (ColorSpaceConvertible px PixelYCbCr8) => Image px -> ByteString
 encodeImage =

@@ -2,10 +2,10 @@ module SvgImage where
 
 import Codec.Picture
 import Graphics.Rasterific
+import Graphics.Rasterific.Texture (uniformTexture)
 import Image hiding (red)
 import Prelude
 import System.Hardware.StreamDeck qualified as StreamDeck
-import Graphics.Rasterific.Texture (uniformTexture)
 
 mergeImage :: Drawing PixelRGBA8 () -> Drawing PixelRGBA8 () -> Drawing PixelRGBA8 ()
 mergeImage img1 img2 =

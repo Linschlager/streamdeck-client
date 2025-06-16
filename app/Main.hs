@@ -2,23 +2,14 @@
 {-# OPTIONS_GHC -Wno-missing-local-signatures #-}
 module Main where
 
-import Debug.Trace
-import FRP.Rhine
-import FRP.StreamDeck.Layer
-import FRP.StreamDeck.StreamDeckMk2Clock
-    ( StreamDeckMk2Clock (StreamDeckMk2Clock), StreamDeckMk2Event
-    )
-import FRP.StreamDeck.StreamDeckPlusClock (StreamDeckPlusClock(StreamDeckPlusClock))
-import StreamDeckPlus qualified
-import System.Hardware.StreamDeck qualified as StreamDeck
-import System.Hardware.StreamDeck.StreamDeckMk2
-import System.Hardware.StreamDeck.StreamDeckPlus
-import Prelude
+import Control.Monad.Schedule.Class
 import Github.GithubClock
 import Layers.Layer (DeckLayers (..), LayerUpdate(..), doSetup)
-import Control.Monad.Schedule.Class
-import System.Hardware.StreamDeck (StreamDeckT(..))
+import Prelude
 import StreamDeckMk2 qualified
+import StreamDeckPlus qualified
+import System.Hardware.StreamDeck (StreamDeckT(..))
+import System.Hardware.StreamDeck qualified as StreamDeck
 
 instance forall io s. (MonadSchedule io, Monad io) => MonadSchedule (StreamDeckT io s) where
   schedule as = StreamDeck . fmap (second (StreamDeck <$>)) $ schedule (unStreamDeck <$> as)
